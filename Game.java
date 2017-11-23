@@ -11,14 +11,15 @@
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2011.08.10
+ * @author  Giovanny Ospina
+ * @version 11.19.2017
  */
 
 public class Game 
 {
     private Parser parser;
     private Room currentRoom;
+    private Room lastRoom;
         
     /**
      * Create the game and initialise its internal map.
@@ -34,30 +35,77 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room seats, bathroom, lockerroom, level1, level2, hallway, shopstand, janitors, food, supply,
+                                                    stairs, tunnel, conference, field, outside;
       
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        seats = new Room("at the seats in the stadium.");
+        bathroom = new Room("in the bathroom. Can't hide in here forever.");
+        lockerroom = new Room("in the clubs locker room.");
+        level1 = new Room("on the first level of the stadium. Almost there.");
+        level2 = new Room("on the second level of the stadium. I need to find my way downstairs.");
+        hallway = new Room("in the main hallways of the stadium. Wow it's a complete mess.");
+        shopstand = new Room("at the destroyed t-shirt stand in the hallways.");
+        janitors = new Room("inside the janitors closet.");
+        food = new Room("at the food stand. I can easily eat right now.");
+        supply = new Room("in the supply room. Can't believe this room is bigger than my house.");
+        stairs = new Room("in the staircase.");
+        tunnel = new Room("inside the field tunnel. This is how it feels to be a player....... nice.");
+        conference = new Room("in the conference room in the stadium. ");
+        field = new Room("in the middle of the field. What a view.");
+        outside = new Room("finally outside. Time to go back home!!");
         
         // initialise room exits
-        outside.setExit("east", theater);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
+        seats.setExit("up", hallway);
+        seats.setExit("down", field);
+        
+        lockerroom.setExit("right", conference);
+        lockerroom.setExit("left", supply);
+        lockerroom.setExit("forward", tunnel);
+        
+        level1.setExit("up", stairs);
+        level1.setExit("right", hallway);
+        level1.setExit("left", hallway);
+        level1.setExit("forward", seats);
+        
+        level2.setExit("down", stairs);
+        level2.setExit("right", hallway);
+        level2.setExit("left", hallway);
+      
+        hallway.setExit("right", bathroom);
+        hallway.setExit("left", shopstand);
+        hallway.setExit("forward", food);
+        hallway.setExit("down", seats);
+        
+        shopstand.setExit("right", hallway);
+        shopstand.setExit("left", janitors);
+        shopstand.setExit("forward", food);
+        
+        janitors.setExit("foward", janitors);
+        
+        food.setExit("left", hallway);
+        food.setExit("right", bathroom);
+        
+        supply.setExit("out", outside);
+        
+        stairs.setExit("up", level2);
+        stairs.setExit("down", level1);
+        
+        tunnel.setExit("in", lockerroom);
+        tunnel.setExit("out", field);
+        
+        conference.setExit("left", lockerroom);
+        conference.setExit("right", lockerroom);
+        
+        field.setExit("right", tunnel);
+        field.setExit("up", seats);
+        
+        field.addItem(new Item ("soccer ball", 2));
+        lockerroom.addItem(new Item ("cleats", 1));
+        shopstand.addItem(new Item("jersey" , 0.5));
+        food.addItem(new Item("crunchy nachos" , 0.25));
 
-        theater.setExit("west", outside);
-
-        pub.setExit("east", outside);
-
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
-
-        office.setExit("west", lab);
-
-        currentRoom = outside;  // start game outside
+        currentRoom = seats;  // start game at your seat
     }
 
     /**
@@ -84,8 +132,9 @@ public class Game
     private void printWelcome()
     {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("The World Cup finals is over and the stadium is roaring!");
+        System.out.println("Wait what is that? A flare has just been shot across the stadium and riots begin to break out!");
+        System.out.println("Quickly get out of there unharmed.");
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
         System.out.println(currentRoom.getLongDescription());
@@ -114,6 +163,18 @@ public class Game
             case GO:
                 goRoom(command);
                 break;
+                
+            case LOOK:
+                goRoom(command);
+                break;
+            
+            case GRAB:
+                goRoom(command);
+                break;
+                
+            case BACK:
+                goRoom(command);
+                break;
 
             case QUIT:
                 wantToQuit = quit(command);
@@ -131,8 +192,8 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("Riots have broken out after the game and the whole stadium is crazy.");
+        System.out.println("You are at your seat watching and all you can is to get out of there.");
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
@@ -156,14 +217,31 @@ public class Game
         Room nextRoom = currentRoom.getExit(direction);
 
         if (nextRoom == null) {
-            System.out.println("There is no door!");
+            System.out.println("There is no exit!");
         }
         else {
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
         }
     }
-
+    
+    /**
+     * Back method that allows you to go to the room right before the current room.
+     */
+   
+    private void back()
+    {
+        if (lastRoom == null)
+        {
+            System.out.println("You haven't gone anywhere yet!");
+        }
+        else 
+        {
+            currentRoom = lastRoom;
+            System.out.println(currentRoom.getLongDescription());
+        }
+    }
+    
     /** 
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game.

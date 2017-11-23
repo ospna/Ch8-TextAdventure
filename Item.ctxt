@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=Item
+comment0.text=\r\n\ Item\ Class.\ \r\n\ Items\ have\ a\ description\ and\ weight\ that\ are\ placed\ within\ rooms.\r\n\r\n\ @author\ Giovanny\ Ospina\r\n\ @version\ 11.19.2017\r\n
+comment1.params=description\ weight
+comment1.target=Item(java.lang.String,\ double)
+comment1.text=\r\n\ Constructor\ for\ Item\ Objects\r\n\ @param\ description\ This\ is\ a\ short\ description\ of\ the\ item\r\n\ @param\ weight\ This\ is\ the\ weight\ of\ the\ item\r\n
+comment2.params=
+comment2.target=java.lang.String\ getDescription()
+comment2.text=\r\n\ Getters\ for\ weight\ and\ description\r\n
+comment3.params=
+comment3.target=double\ getWeight()
+numComments=4
