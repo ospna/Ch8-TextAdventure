@@ -1,3 +1,4 @@
+import java.util.Stack;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -15,11 +16,15 @@
  * @version 11.19.2017
  */
 
+
 public class Game 
 {
     private Parser parser;
     private Room currentRoom;
     private Room lastRoom;
+    private int timer = 0;
+    private Room fail;
+    private Stack multiLastRooms = new Stack();
         
     /**
      * Create the game and initialise its internal map.
@@ -36,7 +41,7 @@ public class Game
     private void createRooms()
     {
         Room seats, bathroom, lockerroom, level1, level2, hallway, shopstand, janitors, food, supply,
-                                                    stairs, tunnel, conference, field, outside;
+                                                    stairs, tunnel, conference, field, outside, fail;
       
         // create the rooms
         seats = new Room("at the seats in the stadium.");
@@ -54,10 +59,13 @@ public class Game
         conference = new Room("in the conference room in the stadium. ");
         field = new Room("in the middle of the field. What a view.");
         outside = new Room("finally outside. Time to go back home!!");
+        fail = new Room("You have been consumed by the riot. Your great day has been torn to smithereens. You lose.");
         
         // initialise room exits
         seats.setExit("up", hallway);
         seats.setExit("down", field);
+        
+        bathroom.setExit("out", hallway);
         
         lockerroom.setExit("right", conference);
         lockerroom.setExit("left", supply);
@@ -81,7 +89,7 @@ public class Game
         shopstand.setExit("left", janitors);
         shopstand.setExit("forward", food);
         
-        janitors.setExit("foward", janitors);
+        janitors.setExit("forward", janitors);
         
         food.setExit("left", hallway);
         food.setExit("right", bathroom);
@@ -119,10 +127,19 @@ public class Game
         // execute them until the game is over.
                 
         boolean finished = false;
-        while (! finished) {
+        while (! finished) 
+        {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
+       
+        if (timer > 20)
+        {
+            currentRoom = fail;
+            System.out.println(currentRoom.getLongDescription());
+            finished = true;
+        }
+    
         System.out.println("Thank you for playing.  Good bye.");
     }
 
@@ -164,16 +181,13 @@ public class Game
                 goRoom(command);
                 break;
                 
-            case LOOK:
-                goRoom(command);
-                break;
             
-            case GRAB:
-                goRoom(command);
-                break;
+            // case GRAB:
+                // grab();
+                // break;
                 
             case BACK:
-                goRoom(command);
+                back();
                 break;
 
             case QUIT:
@@ -220,7 +234,9 @@ public class Game
             System.out.println("There is no exit!");
         }
         else {
+            lastRoom = currentRoom;
             currentRoom = nextRoom;
+            timer = timer + 1;
             System.out.println(currentRoom.getLongDescription());
         }
     }
@@ -231,13 +247,14 @@ public class Game
    
     private void back()
     {
-        if (lastRoom == null)
+        if (multiLastRooms.empty())
         {
-            System.out.println("You haven't gone anywhere yet!");
+            System.out.println("You haven't gone anywhere!");
         }
-        else 
+        else
         {
-            currentRoom = lastRoom;
+            currentRoom = (Room) multiLastRooms.pop();
+            System.out.println("You retrace your foot steps and find your way back to where you were earlier.");
             System.out.println(currentRoom.getLongDescription());
         }
     }
