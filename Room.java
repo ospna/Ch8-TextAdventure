@@ -15,6 +15,7 @@ import java.util.HashSet;
  * 
  * @author Giovanny Ospina
  * @version 11.19.2017
+ * .
  */
 
 public class Room 

@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=CommandWord
-comment0.text=\r\n\ Representations\ for\ all\ the\ valid\ command\ words\ for\ the\ game\r\n\ along\ with\ a\ string\ in\ a\ particular\ language.\r\n\ \r\n\ @author\ Giovanny\ Ospina\r\n\ @version\ 11.19.2017\r\n
+comment0.text=\r\n\ Representations\ for\ all\ the\ valid\ command\ words\ for\ the\ game\r\n\ along\ with\ a\ string\ in\ a\ particular\ language.\r\n\ \r\n\ @author\ Giovanny\ Ospina\r\n\ @version\ 11.19.2017\r\n\ .\r\n
 comment1.params=commandString
 comment1.target=CommandWord(java.lang.String)
 comment1.text=\r\n\ Initialise\ with\ the\ corresponding\ command\ string.\r\n\ @param\ commandString\ The\ command\ string.\r\n

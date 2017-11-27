@@ -53,12 +53,12 @@ public class Game
         shopstand = new Room("at the destroyed t-shirt stand in the hallways.");
         janitors = new Room("inside the janitors closet.");
         food = new Room("at the food stand. I can easily eat right now.");
-        supply = new Room("in the supply room. Can't believe this room is bigger than my house.");
+        supply = new Room("in the huge supply room. Wait I see an opening.");
         stairs = new Room("in the staircase.");
         tunnel = new Room("inside the field tunnel. This is how it feels to be a player....... nice.");
         conference = new Room("in the conference room in the stadium. ");
         field = new Room("in the middle of the field. What a view.");
-        outside = new Room("finally outside. Time to go back home!!");
+        outside = new Room("whew finally outside. Time to go back home!!");
         fail = new Room("You have been consumed by the riot. Your great day has been torn to smithereens. You lose.");
         
         // initialise room exits
@@ -103,7 +103,6 @@ public class Game
         tunnel.setExit("out", field);
         
         conference.setExit("left", lockerroom);
-        conference.setExit("right", lockerroom);
         
         field.setExit("right", tunnel);
         field.setExit("up", seats);
@@ -206,8 +205,8 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("Riots have broken out after the game and the whole stadium is crazy.");
-        System.out.println("You are at your seat watching and all you can is to get out of there.");
+        System.out.println("Riots have broken out after the game and the whole stadium is going crazy.");
+        System.out.println("You are at your seat watching and all you can do is to get out of there.");
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
@@ -235,6 +234,7 @@ public class Game
         }
         else {
             lastRoom = currentRoom;
+            multiLastRooms.push(lastRoom);
             currentRoom = nextRoom;
             timer = timer + 1;
             System.out.println(currentRoom.getLongDescription());
@@ -254,7 +254,7 @@ public class Game
         else
         {
             currentRoom = (Room) multiLastRooms.pop();
-            System.out.println("You retrace your foot steps and find your way back to where you were earlier.");
+            System.out.println("You are back to where you came from. Keep going.");
             System.out.println(currentRoom.getLongDescription());
         }
     }
